@@ -1,10 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>FacebookLikesPredictor</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AP Project</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="./assets/css/grayscale.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="./assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="http://www.google.com/s2/favicons?domain=www.iiitd.ac.in" type="image/x-icon">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
-<body>
-Initial commit
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" style="overflow-y:hidden;font-family:Open Sans;">
+    <script>
+      // This is called with the results from from FB.getLoginStatus().
+      function statusChangeCallback(response) {
+        console.log('statusChangeCallback');
+        console.log(response);
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') {
+          testAPI();
+          document.cookie="token="+response.authResponse.accessToken+";path=/;";
+          console.log(response.authResponse.accessToken);
+  
+         setTimeout(function(){
+            window.location.replace("./FetchDataAndPredict");
+          }, 1500)
+
+        } else if (response.status === 'not_authorized') {
+          // The person is logged into Facebook, but not your app.
+          document.getElementById('status').innerHTML = 'Please log ' +
+            'into this app.';
+        } else {
+          // The person is not logged into Facebook, so we're not sure if
+          // they are logged into this app or not.
+          document.getElementById('status').innerHTML = 'Please log ' +
+            'into Facebook.';
+        }
+      }
+
+      // This function is called when someone finishes with the Login
+      // Button.  See the onlogin handler attached to it in the sample
+      // code below.
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+      }
+
+      window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '426505660871444',
+        cookie     : true,  // enable cookies to allow the server to access 
+                            // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v2.2' // use version 2.2
+      });
+
+      // Now that we've initialized the JavaScript SDK, we call 
+      // FB.getLoginStatus().  This function gets the state of the
+      // person visiting this page and can return one of three states to
+      // the callback you provide.  They can be:
+      //
+      // 1. Logged into your app ('connected')
+      // 2. Logged into Facebook, but not your app ('not_authorized')
+      // 3. Not logged into Facebook and can't tell if they are logged into
+      //    your app or not.
+      //
+      // These three cases are handled in the callback function.
+
+      $('#fblogin').click(function(){
+          FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+          });        
+      })
+
+      };
+
+      // Load the SDK asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      // Here we run a very simple test of the Graph API after login is
+      // successful.  See statusChangeCallback() for when this call is made.
+      function testAPI() {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response) {
+          console.log('Successful login for: ' + response.name);
+        });
+      }
+    </script>
+
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">
+                    <i class="fa fa-play-circle"></i>  <span class="light">Advanced</span> Programming
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li>
+                        <a class="page-scroll" href="#page-top">Intro</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#get-started">Get Started</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1 class="brand-heading">FINAL AP PROJECT</h1>
+                        <p class="intro-text">Anant Jain - 20140xx <br/> Shrey Bagroy - 2014099</p>
+                        <a href="#about" class="btn btn-circle page-scroll">
+                            <i class="fa fa-angle-double-down animated"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Final project for the Advanced Programming course</h2>
+                <p>This project aims at predicting the number of likes on a Facebook post.</p>
+                <p>It uses a users last 100 posts to estimate this value. This data is fetched using the Facebook Graph API. An OAuth access token is used, for which the user will need to log into their Facebook account and give this app the required permissions.</p>
+                <p>Click to get started!</p>
+
+            </div>
+        </div>
+
+        <a href="#get-started" class="btn btn-circle page-scroll">
+            <i class="fa fa-angle-double-down animated"></i>
+        </a>
+
+    </section>
+
+    <!-- Download Section -->
+    <section id="get-started" class="content-section text-center">
+        <div class="download-section">
+            <div class="container">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <h2>Login with Facebook</h2>
+                    <p>Please log into your Facebook account.</p>
+                    <div id="fblogin"><a class="btn btn-default btn-lg" onclick="FB.login(function(response){},{perms:'email,user_likes'});"><i class="fa fa-facebook"></i> Facebook Login</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>CSE 121 &copy; AP</p>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="./assets/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="./assets/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="./assets/js/jquery.easing.min.js"></script>
+
+    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="./assets/js/grayscale.js"></script>
+
 </body>
+
 </html>
