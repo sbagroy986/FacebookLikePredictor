@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import FLP.models.Post;
+import FLP.utilities.LinearRegression;
 
 @WebServlet("/FetchDataAndPredict")
 public class FetchDataAndPredict extends HttpServlet {
@@ -43,7 +44,7 @@ public class FetchDataAndPredict extends HttpServlet {
 		response.getWriter().println(token);
 		
 		String GET_URL = "https://graph.facebook.com/v2.5/me/posts?fields=likes,message_tags,application,caption,created_time,description,from,link,message,name,picture,place,properties,source,status_type,story,to,type,with_tags&limit=100&access_token=" + token;
-		response.getWriter().println(GET_URL);
+//		response.getWriter().println(GET_URL);
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet(GET_URL);
 	    CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
@@ -55,7 +56,7 @@ public class FetchDataAndPredict extends HttpServlet {
 			JSONObject dump = new JSONObject(readResponse);
 			JSONArray posts_dump = new JSONArray();
 			posts_dump =(JSONArray)dump.get("data");
-			response.getWriter().println(posts_dump);
+//			response.getWriter().println(posts_dump);
 			int len = posts_dump.length();
 //			System.out.println(len);
 			for(int i=0;i<len;i++)
@@ -63,11 +64,13 @@ public class FetchDataAndPredict extends HttpServlet {
 				JSONObject temp = (JSONObject)posts_dump.get(i);
 				Post post = new Post(temp);
 				posts.add(post);
-				response.getWriter().println("Likes on"+temp+": " + post.getLikes());
 			}
 		} catch (Exception e) {
 			System.out.println("Invalid JSON Object!");
 		}
+	    
+	    LinearRegression.setLinearRegression(posts,response);
+	    LinearRegression.display(response);
 	    
 	}
 

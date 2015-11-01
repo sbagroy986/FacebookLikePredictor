@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -81,7 +82,7 @@ public class Post {
 			if(post.has("place")) setPlace();
 			if(post.has("status_type")) setStatusType((String)post.get("status_type"));
 			if(post.has("type")) setType((String)post.get("type"));
-			setTimeParams((String)post.get("created_at"));
+			setTimeParams((String)post.get("created_time"));
 		}
 		catch(Exception e)
 		{
@@ -199,8 +200,14 @@ public class Post {
 	
 	private void setTimeParams(String time) throws ParseException
 	{
-		DateFormat format = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss", Locale.ENGLISH);
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
 		Date date = format.parse(time);
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		
+		this.created_day_of_week = c.get(Calendar.DAY_OF_WEEK);
+		this.created_hour_of_day = date.getHours();
 	}
 	
 	public int getMessage_tags() {
