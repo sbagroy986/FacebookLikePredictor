@@ -3,7 +3,9 @@ package FLP.servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -30,6 +32,8 @@ public class FetchDataAndPredict extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Post> posts = new ArrayList<>();
     private String token;
+    private String pic_url;
+    private String user_id;
 
     public FetchDataAndPredict() {
         super();
@@ -72,6 +76,16 @@ public class FetchDataAndPredict extends HttpServlet {
 				addPosts(posts_dump,dump.getJSONArray("data"));
 			}
 			
+			httpClient = HttpClients.createDefault();
+			GET_URL = "https://graph.facebook.com/v2.5/me?fields=id,picture&access_token="+token;
+			httpGet = new HttpGet(GET_URL);
+			httpResponse = httpClient.execute(httpGet);
+			reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+			readResponse = reader.readLine();
+			dump = new JSONObject(readResponse);
+			
+			pic_url = dump.getJSONObject("picture").getJSONObject("data").getString("url");
+			user_id = dump.getString("id");
 			
 			int len = posts_dump.size();
 			response.getWriter().println("Total number of posts: " + len);
@@ -91,7 +105,7 @@ public class FetchDataAndPredict extends HttpServlet {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	    LinearRegression.display(response);
+	    LinearRegression.display(posts,response);
 	  
 	    Cookie size = new Cookie("Posts","" + posts.size());
 	    HashMap<String,Integer> top10 = LinearRegression.getTop10();
@@ -99,6 +113,37 @@ public class FetchDataAndPredict extends HttpServlet {
 	    {
 	    	Cookie c = new Cookie(("Histo--" + s).replaceAll("\\s+",""),top10.get(s).toString());
 	    	response.addCookie(c);
+	    }
+	    
+	    Collections.shuffle(posts);
+	    
+	    for(int i=1;i<=15;i++)
+	    {
+//	    	System.out.println(posts.get(i).getRawData().toString());
+	    	Cookie post_id=null,post_msg=null,post_likes=null,post_pred=null,url=null;
+	    	url = new Cookie("url",URLEncoder.encode(pic_url,"UTF-8"));
+	    	response.addCookie(url);
+			try {
+				post_id = new Cookie("post_id_"+i,URLEncoder.encode(user_id + "_"+ posts.get(i).getRawData().getString("id").split("_")[1],"UTF-8"));
+				if(posts.get(i).getRawData().has("message"))
+					post_msg = new Cookie("post_msg_"+i,URLEncoder.encode(posts.get(i).getRawData().getString("message"),"UTF-8"));
+				else if(posts.get(i).getRawData().has("description"))
+					post_msg = new Cookie("post_msg_"+i,URLEncoder.encode(posts.get(i).getRawData().getString("description"),"UTF-8"));
+				else if(posts.get(i).getRawData().has("story"))
+					post_msg = new Cookie("post_msg_"+i,URLEncoder.encode(posts.get(i).getRawData().getString("story"),"UTF-8"));
+				else if(posts.get(i).getRawData().has("name"))
+					post_msg = new Cookie("post_msg_"+i,URLEncoder.encode(posts.get(i).getRawData().getString("name"),"UTF-8"));
+				post_likes = new Cookie("post_likes_"+i,URLEncoder.encode(""+posts.get(i).getLikes(),"UTF-8"));
+				post_pred = new Cookie("post_pred_"+i,URLEncoder.encode(""+posts.get(i).getPredictedLikes(),"UTF-8"));
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	response.addCookie(post_id);
+	    	response.addCookie(post_likes);
+	    	response.addCookie(post_pred);
+	    	response.addCookie(post_msg);
 	    }
 	    
 	    RequestDispatcher view = request.getRequestDispatcher("/results.html");

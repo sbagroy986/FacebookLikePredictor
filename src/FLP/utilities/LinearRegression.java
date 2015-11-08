@@ -12,6 +12,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.math3.exception.OutOfRangeException;
@@ -28,16 +29,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import FLP.models.Post;
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
 
 public class LinearRegression {
 	private static String token;
-	private static RealMatrix Y;
-	private static RealMatrix theta;
-	private static RealMatrix X;
-	private static RealMatrix ans;
+	private static Matrix Y;
+	private static Matrix theta;
+	private static Matrix X;
+	private static Matrix ans;
 	private static int m;
 	private static HashMap<String,Integer> freq = new HashMap<>();
 	private static HashMap<String,Integer> top_10 = new HashMap<>();
+	
+	public static double MACHEPS = 2E-16;
+	
+	public static void updateMacheps() {
+		  MACHEPS = 1;
+		  do
+		   MACHEPS /= 2;
+		  while (1 + MACHEPS / 2 != 1);
+	}
+	
 	
 	public static void setLinearRegression(ArrayList<Post> posts,HttpServletResponse response, String tok) throws IOException, JSONException
 	{
@@ -52,58 +65,89 @@ public class LinearRegression {
 	
 	public static void setY(ArrayList<Post> posts)
 	{
-		double[] y = new double[m];
+		double[][] y = new double[m][];
 		for(int i=0;i<m;i++)
 		{
-			y[i] = posts.get(i).getLikes();
+			double[] temp = new double[1];
+			temp[0] = posts.get(i).getLikes();
+			y[i] = temp;
 		}
-		Y = new Array2DRowRealMatrix(y);
+		Y = new Matrix(y);
 	}
 	
+	public static Matrix pinv(Matrix x) {
+		  int rows = x.getRowDimension();
+		  int cols = x.getColumnDimension();
+		  if (rows < cols) {
+		   Matrix result = pinv(x.transpose());
+		   if (result != null)
+		    result = result.transpose();
+		   return result;
+		  }
+		  SingularValueDecomposition svdX = new SingularValueDecomposition(x);
+		  if (svdX.rank() < 1)
+		   return null;
+		  double[] singularValues = svdX.getSingularValues();
+		  double tol = Math.max(rows, cols) * singularValues[0] * MACHEPS;
+		  double[] singularValueReciprocals = new double[singularValues.length];
+		  for (int i = 0; i < singularValues.length; i++)
+		   if (Math.abs(singularValues[i]) >= tol)
+		    singularValueReciprocals[i] =  1.0 / singularValues[i];
+		  double[][] u = svdX.getU().getArray();
+		  double[][] v = svdX.getV().getArray();
+		  int min = Math.min(cols, u[0].length);
+		  double[][] inverse = new double[cols][rows];
+		  for (int i = 0; i < cols; i++)
+		   for (int j = 0; j < u.length; j++)
+		    for (int k = 0; k < min; k++)
+		     inverse[i][j] += v[i][k] * singularValueReciprocals[k] * u[j][k];
+		  return new Matrix(inverse);
+	}
+	 
 	public static void setX(ArrayList<Post> posts,HttpServletResponse response) throws IOException
 	{
 		double[][] x = new double[m][];
 		
 		for(int i=0;i<m;i++)
 		{
-			double[] temp = new double[9];
+			double[] temp = new double[26];
 			
 			temp[0] = 1;
 			temp[1] = posts.get(i).getWith_tags();
 			temp[2] = posts.get(i).getMessage_tags();
 			
-//			temp[3] = posts.get(i).getQuora();
-//			temp[4] = posts.get(i).getiOS();
-//			temp[5] = posts.get(i).getInstagram();
-//			temp[6] = posts.get(i).getTwitter();
-//			temp[7] = posts.get(i).getYoutube();
-//			temp[8] = posts.get(i).getOtherApp();
+			temp[3] = posts.get(i).getQuora();
+			temp[4] = posts.get(i).getiOS();
+			temp[5] = posts.get(i).getInstagram();
+			temp[6] = posts.get(i).getTwitter();
+			temp[7] = posts.get(i).getYoutube();
+			temp[8] = posts.get(i).getOtherApp();
 			
-			temp[3] = posts.get(i).getCaption();
-			temp[4] = posts.get(i).getDescription();
-			temp[5] = posts.get(i).getMessage();
+			temp[9] = posts.get(i).getCaption();
+			temp[10] = posts.get(i).getDescription();
+			temp[11] = posts.get(i).getMessage();
 			
-			temp[6] = posts.get(i).getPlace();
+			temp[12] = posts.get(i).getPlace();
 			
-//			temp[13] = posts.get(i).getMobile_status_update();
-//			temp[14] = posts.get(i).getAdded_photos();
-//			temp[15] = posts.get(i).getAdded_video();
-//			temp[16] = posts.get(i).getShared_story();
-//			temp[17] = posts.get(i).getWall_post();
-//			temp[18] = posts.get(i).getOther_status_type();
+			temp[13] = posts.get(i).getMobile_status_update();
+			temp[14] = posts.get(i).getAdded_photos();
+			temp[15] = posts.get(i).getAdded_video();
+			temp[16] = posts.get(i).getShared_story();
+			temp[17] = posts.get(i).getWall_post();
+			temp[18] = posts.get(i).getOther_status_type();
 			
-//			temp[19] = posts.get(i).getLink();
-//			temp[20] = posts.get(i).getStatus();
-//			temp[21] = posts.get(i).getPhoto();
-//			temp[22] = posts.get(i).getVideo();
-//			temp[23] = posts.get(i).getOther();
+			temp[19] = posts.get(i).getLink();
+			temp[20] = posts.get(i).getStatus();
+			temp[21] = posts.get(i).getPhoto();
+			temp[22] = posts.get(i).getVideo();
+			temp[23] = posts.get(i).getOther();
 			
-			temp[7] = posts.get(i).getCreated_hour_of_day();
-			temp[8] = posts.get(i).getCreated_day_of_week();
+			temp[24] = posts.get(i).getCreated_hour_of_day();
+			temp[25] = posts.get(i).getCreated_day_of_week();
 		
 			x[i] = temp;
 		}
-		X = new Array2DRowRealMatrix(x);
+		X = new Matrix(x);
 		response.getWriter().println(X);
 	}
 	
@@ -120,23 +164,26 @@ public class LinearRegression {
 	
 	public static void calcAns()
 	{
-		ans = X.multiply(theta);
+		ans = X.times(theta);
 	}
 	
 	public static void NormalEqn()
 	{
-		RealMatrix temp = X.transpose().multiply(X);
-		RealMatrix tempInverse = new LUDecomposition(temp).getSolver().getInverse();
-		theta = tempInverse.multiply(X.transpose()).multiply(Y);
+		Matrix temp = X.transpose().times(X);
+		Matrix tempInverse = pinv(temp);
+		theta = tempInverse.times(X.transpose()).times(Y);
 	}
 	
-	public static void display(HttpServletResponse response) throws OutOfRangeException, IOException
+	public static void display(ArrayList<Post> posts,HttpServletResponse response) throws OutOfRangeException, IOException
 	{
-		double[][] y = Y.getData();
-		double[][] a = ans.getData();
+		double[][] y = Y.getArray();
+		double[][] a = ans.getArray();
 		double[] form = new double[m];
 		for(int i=0;i<m;i++)
-			form[i]=y[i][0];
+			{
+				form[i]=y[i][0];
+				posts.get(i).setPredictedLikes((int)a[i][0]);
+			}
 		double cost =  CostFunction(a,form);
 		double count_15=0,count_10=0,count_5=0,count_3=0;
 		System.out.println("COST : " + cost);
@@ -179,6 +226,18 @@ public class LinearRegression {
 		{
 			response.getWriter().println(s + " : " + top_10.get(s));
 		}
+		count_15 = ((double)(count_15/(double)(m)))*100;
+		count_10 = ((double)(count_10/(double)(m)))*100;
+		count_5 = ((double)(count_5/(double)(m)))*100;
+		count_3 = ((double)(count_3/(double)(m)))*100;
+		Cookie fif = new Cookie("accuracy_15",""+count_15);
+		Cookie ten = new Cookie("accuracy_10",""+count_10);
+		Cookie three = new Cookie("accuracy_3",""+count_3);
+		Cookie five = new Cookie("accuracy_5",""+count_5);
+		response.addCookie(fif);
+		response.addCookie(five);
+		response.addCookie(ten);
+		response.addCookie(three);
 	}
 	
 	

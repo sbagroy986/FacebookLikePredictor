@@ -52,7 +52,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="well text-center">
-                    This is a well that is a great spot for a business tagline or phone number for easy access!
+                    <div id="three"></div>
+                    <div id="five"></div>
+                    <div id="ten"></div>
+                    <div id="fif"></div>
                 </div>
             </div>
             <!-- /.col-lg-12 -->
@@ -60,25 +63,7 @@
         <!-- /.row -->
 
         <!-- Content Row -->
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Heading 1</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe rem nisi accusamus error velit animi non ipsa placeat. Recusandae, suscipit, soluta quibusdam accusamus a veniam quaerat eveniet eligendi dolor consectetur.</p>
-                <a class="btn btn-default" href="#">More Info</a>
-            </div>
-            <!-- /.col-md-4 -->
-            <div class="col-md-4">
-                <h2>Heading 2</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe rem nisi accusamus error velit animi non ipsa placeat. Recusandae, suscipit, soluta quibusdam accusamus a veniam quaerat eveniet eligendi dolor consectetur.</p>
-                <a class="btn btn-default" href="#">More Info</a>
-            </div>
-            <!-- /.col-md-4 -->
-            <div class="col-md-4">
-                <h2>Heading 3</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe rem nisi accusamus error velit animi non ipsa placeat. Recusandae, suscipit, soluta quibusdam accusamus a veniam quaerat eveniet eligendi dolor consectetur.</p>
-                <a class="btn btn-default" href="#">More Info</a>
-            </div>
-            <!-- /.col-md-4 -->
+        <div class="row" id="posts">
         </div>
         <!-- /.row -->
 
@@ -86,7 +71,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Your Website 2014</p>
+		            <p>CSE 121 &copy; AP</p>
                 </div>
             </div>
         </footer>
@@ -105,13 +90,29 @@
 	window.onload = function() {
 	};
     google.setOnLoadCallback(drawChart);
+    function decode_utf8(s) {
+ 	 return decodeURIComponent(escape(s));
+	}
     function drawChart() {
 	    var x = document.cookie;
 	    var tkns = x.split(';');
 	    var d = [];
 	    d.push(['People','Number of likes']);
+    	var map = {};
 	    for(var i=0;i<tkns.length;i++)
 	    {
+	    	if(tkns[i].split("=")[0] == "url")
+	    	{
+	    		map[(tkns[i].split("=")[0]).replace(" ","")] = decode_utf8(tkns[i].split("=")[1]);	    		
+	    	}
+	    	else
+	    	{
+	    		map[(tkns[i].split("=")[0]).replace(" ","")] = decode_utf8(tkns[i].split("=")[1]);
+	    	}
+	    	console.log(tkns[i]);
+	    	console.log(tkns[i].split("=")[0]);
+	    	console.log(tkns[i].split("=")[1]);
+
 	    	if(tkns[i].indexOf("Histo--") > -1)
 	    	{
 	    		var k = tkns[i].split("--");
@@ -121,6 +122,39 @@
 	    		console.log(t[0] + " : " + t[1]);
 	    		d.push(t);
 	    	}
+	    	if(tkns[i].indexOf("accuracy_15") > -1)
+	    	{
+	    		var k = tkns[i].split("accuracy_15=");
+	    		var div = document.getElementById('fif');
+	    		div.innerHTML += 'Accuracy for predicted likes within a 15 like margin : <b>'+parseFloat(k[1]).toPrecision(4)+'%</b><br/>';
+	    	}
+	    	if(tkns[i].indexOf("accuracy_10") > -1)
+	    	{
+	    		var k = tkns[i].split("accuracy_10=");
+	    		var div = document.getElementById('ten');
+	    		div.innerHTML += 'Accuracy for predicted likes within a 10 like margin : <b>'+parseFloat(k[1]).toPrecision(4)+'%</b><br/>';
+	    	}
+	    	if(tkns[i].indexOf("accuracy_5") > -1)
+	    	{
+	    		var k = tkns[i].split("accuracy_5=");
+	    		var div = document.getElementById('five');
+	    		div.innerHTML += 'Accuracy for predicted likes within a 5 like margin : <b>'+parseFloat(k[1]).toPrecision(4)+'%</b><br/>';
+	    	}
+	    	if(tkns[i].indexOf("accuracy_3") > -1)
+	    	{
+	    		var k = tkns[i].split("accuracy_3=");
+	    		var div = document.getElementById('three');
+	    		div.innerHTML += 'Accuracy for predicted likes within a 3 like margin : <b>'+parseFloat(k[1]).toPrecision(4)+'%</b><br/>';
+	    	}
+
+	    }
+
+	    for(var i=1;i<=15;i++)
+	    {
+			// console.log(map['post_id_'])	    		
+    		var div = document.getElementById("posts");
+    		div.innerHTML += '<div class="col-md-8"><h5>Post ID: <a href="https://facebook.com/' + map['post_id_' + i] + '">' + map['post_id_' + i].split("_")[1] +'</a></h5><p>' + map['post_msg_'+i] + '</p><p>Actual likes: <b>' + map['post_likes_'+i] + '</b></p><p>Predicted likes: <b>' + map['post_pred_'+i] + '</b></p></div>'
+
 	    }
 
 		var data = google.visualization.arrayToDataTable(d);

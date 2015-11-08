@@ -67,6 +67,9 @@ public class Post {
 	private int created_day_of_week = 0;
 	
 	private int likes=0;
+	private int predicted_likes=0;
+	
+	private JSONObject raw_data;
 	
 	private ArrayList<String> LikesList = new ArrayList<>();
 	
@@ -74,6 +77,7 @@ public class Post {
 	{
 		try
 		{
+			raw_data = post;
 			getLikes(post.getJSONObject("likes"));
 			if(post.has("with_tags")) setWithTags(post.getJSONObject("with_tags"));
 			if(post.has("message_tags")) setMessageTags(post.getJSONArray("message_tags"));
@@ -85,6 +89,7 @@ public class Post {
 			if(post.has("status_type")) setStatusType((String)post.get("status_type"));
 			if(post.has("type")) setType((String)post.get("type"));
 			setTimeParams((String)post.get("created_time"));
+
 		}
 		catch(Exception e)
 		{
@@ -337,6 +342,18 @@ public class Post {
 	
 	public ArrayList<String> getLikesList(){
 		return LikesList;
+	}
+	
+	public JSONObject getRawData(){
+		return raw_data;
+	}
+	
+	public int getPredictedLikes(){
+		return predicted_likes;
+	}
+	
+	public void setPredictedLikes(int pred){
+		predicted_likes = pred;
 	}
 	
 }
