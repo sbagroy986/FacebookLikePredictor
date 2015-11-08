@@ -43,34 +43,27 @@
         // Full docs on the response object can be found in the documentation
         // for FB.getLoginStatus().
         if (response.status === 'connected') {
-          testAPI();
           document.cookie="token="+response.authResponse.accessToken+";path=/;";
           console.log(response.authResponse.accessToken);
-  
-         setTimeout(function(){
-            window.location.replace("./FetchDataAndPredict");
-          }, 1500)
+          window.location.replace("./FetchDataAndPredict");
 
         } else if (response.status === 'not_authorized') {
           // The person is logged into Facebook, but not your app.
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app.';
+          console.log('Please log ' +
+            'into this app.');
         } else {
           // The person is not logged into Facebook, so we're not sure if
           // they are logged into this app or not.
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into Facebook.';
+			console.log('Please log ' +
+            'into Facebook.');
+          testAPI();
         }
       }
 
       // This function is called when someone finishes with the Login
       // Button.  See the onlogin handler attached to it in the sample
       // code below.
-      function checkLoginState() {
-        FB.getLoginStatus(function(response) {
-          statusChangeCallback(response);
-        });
-      }
+
 
       window.fbAsyncInit = function() {
       FB.init({
@@ -78,7 +71,7 @@
         cookie     : true,  // enable cookies to allow the server to access 
                             // the session
         xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.2' // use version 2.2
+        version    : 'v2.5' // use version 2.2
       });
 
       // Now that we've initialized the JavaScript SDK, we call 
@@ -92,12 +85,6 @@
       //    your app or not.
       //
       // These three cases are handled in the callback function.
-
-      $('#fblogin').click(function(){
-          FB.getLoginStatus(function(response) {
-            statusChangeCallback(response);
-          });        
-      })
 
       };
 
@@ -200,7 +187,7 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <h2>Login with Facebook</h2>
                     <p>Please log into your Facebook account.</p>
-                    <div id="fblogin"><a class="btn btn-default btn-lg" onclick="FB.login(function(response){},{perms:'email,user_posts,user_likes,user_photos,user_videos,user_tagged_places,user_website,user_location,user_managed_groups,public_profile,user_about_me,user_actions.books,user_actions.fitness,user_actions.music,user_actions.news,user_actions.video'});"><i class="fa fa-facebook"></i> Facebook Login</a></div>
+                    <div id="fblogin"><a class="btn btn-default btn-lg" onclick="FB.login(function(response){statusChangeCallback(response);},{perms:'email,user_posts,user_likes,user_photos,user_videos,user_tagged_places,user_website,user_location,user_managed_groups,public_profile,user_about_me,user_actions.books,user_actions.fitness,user_actions.music,user_actions.news,user_actions.video'});"><i class="fa fa-facebook"></i> Facebook Login</a></div>
                 </div>
             </div>
         </div>

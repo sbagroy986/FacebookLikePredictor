@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -67,6 +68,7 @@ public class Post {
 	
 	private int likes=0;
 	
+	private ArrayList<String> LikesList = new ArrayList<>();
 	
 	public Post(JSONObject post) throws ClientProtocolException, IOException
 	{
@@ -117,11 +119,22 @@ public class Post {
 		{
 			JSONObject paging = likes_dump.getJSONObject("paging");
 			likes += likes_dump.getJSONArray("data").length();
+			
+			for(int j=0; j < likes_dump.getJSONArray("data").length(); j++)
+			{
+				LikesList.add(likes_dump.getJSONArray("data").getJSONObject(j).getString("id"));
+			}
+			
 			while(paging.has("next"))
 			{
 				likes_dump = sendReq((String)paging.get("next"));
 				paging = likes_dump.getJSONObject("paging");
 				likes += likes_dump.getJSONArray("data").length();
+				
+				for(int j=0; j < likes_dump.getJSONArray("data").length(); j++)
+				{
+					LikesList.add(likes_dump.getJSONArray("data").getJSONObject(j).getString("id"));
+				}
 			}
 		}
 		catch(Exception e)
@@ -320,6 +333,10 @@ public class Post {
 
 	public void setLikes(int likes) {
 		this.likes = likes;
+	}
+	
+	public ArrayList<String> getLikesList(){
+		return LikesList;
 	}
 	
 }
