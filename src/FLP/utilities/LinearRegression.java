@@ -110,7 +110,7 @@ public class LinearRegression {
 		
 		for(int i=0;i<m;i++)
 		{
-			double[] temp = new double[26];
+			double[] temp = new double[27];
 			
 			temp[0] = 1;
 			temp[1] = posts.get(i).getWith_tags();
@@ -144,7 +144,12 @@ public class LinearRegression {
 			
 			temp[24] = posts.get(i).getCreated_hour_of_day();
 			temp[25] = posts.get(i).getCreated_day_of_week();
-		
+			
+//			temp[26] = posts.get(i).getNo_of_emotes();
+//			temp[27] = posts.get(i).getNo_of_hts();
+//			temp[28] = posts.get(i).getLength_of_details();
+			temp[26] = posts.get(i).getLength_of_msg();
+			
 			x[i] = temp;
 		}
 		X = new Matrix(x);

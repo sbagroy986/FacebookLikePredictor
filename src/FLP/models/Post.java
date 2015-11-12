@@ -29,6 +29,8 @@ import org.apache.commons.math3.linear.*;
 
 
 public class Post {
+	
+	private static String[] emotes = {":)",":-)",":(",":-(",":p",":-p",":-P",":P",":D",":-D","XD","xD"};
 	//Features
 	
 	private int with_tags=0;
@@ -66,6 +68,11 @@ public class Post {
 	private int created_hour_of_day = 0;
 	private int created_day_of_week = 0;
 	
+	private int no_of_hts = 0;
+	private int no_of_emotes = 0;
+	private int length_of_msg = 0;
+	private int length_of_details=0;
+	
 	private int likes=0;
 	private int predicted_likes=0;
 	
@@ -89,6 +96,7 @@ public class Post {
 			if(post.has("status_type")) setStatusType((String)post.get("status_type"));
 			if(post.has("type")) setType((String)post.get("type"));
 			setTimeParams((String)post.get("created_time"));
+			setTextualParams(post);
 
 		}
 		catch(Exception e)
@@ -204,6 +212,64 @@ public class Post {
 		}
 	}
 	
+	private void setTextualParams(JSONObject post) throws JSONException
+	{
+		String temp = "";
+		if(post.has("message"))
+		{
+			temp += (" " + post.getString("message"));
+			length_of_msg = post.getString("message").length();
+		}
+		if(post.has("description"))
+		{
+			temp+= ( " " + post.getString("description"));
+		}
+		if(post.has("caption"))
+		{
+			temp+= (" " + post.getString("caption"));
+		}
+		length_of_details = temp.length();
+		
+		no_of_hts = stringMatcher(temp,"#");
+		for(String emote: emotes)
+		{
+			no_of_emotes += stringMatcher(temp,emote);		
+		}
+		
+	}
+	
+	public int getNo_of_hts() {
+		return no_of_hts;
+	}
+
+	public void setNo_of_hts(int no_of_hts) {
+		this.no_of_hts = no_of_hts;
+	}
+
+	public int getNo_of_emotes() {
+		return no_of_emotes;
+	}
+
+	public void setNo_of_emotes(int no_of_emotes) {
+		this.no_of_emotes = no_of_emotes;
+	}
+
+	public int getLength_of_msg() {
+		return length_of_msg;
+	}
+
+	public void setLength_of_msg(int length_of_msg) {
+		this.length_of_msg = length_of_msg;
+	}
+
+	public int getLength_of_details() {
+		return length_of_details;
+	}
+
+	public void setLength_of_details(int length_of_details) {
+		this.length_of_details = length_of_details;
+	}
+
 	private void setType(String type)
 	{
 		switch(type)
@@ -354,6 +420,22 @@ public class Post {
 	
 	public void setPredictedLikes(int pred){
 		predicted_likes = pred;
+	}
+	
+	public int stringMatcher(String one,String two)
+	{
+		int count=0,index=0;
+		
+		while(index != -1){
+
+		    index = one.indexOf(two,index);
+
+		    if(index != -1){
+		        count ++;
+		        index += two.length();
+		    }
+		}
+		return count;
 	}
 	
 }

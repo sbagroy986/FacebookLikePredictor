@@ -153,7 +153,7 @@
 	    {
 			// console.log(map['post_id_'])	    		
     		var div = document.getElementById("posts");
-    		div.innerHTML += '<div class="col-md-8"><h5>Post ID: <a href="https://facebook.com/' + map['post_id_' + i] + '">' + map['post_id_' + i].split("_")[1] +'</a></h5><p>' + map['post_msg_'+i] + '</p><p>Actual likes: <b>' + map['post_likes_'+i] + '</b></p><p>Predicted likes: <b>' + map['post_pred_'+i] + '</b></p></div>'
+    		div.innerHTML += '<div class="col-md-8"><h5>Post ID: <a href="https://facebook.com/' + map['post_id_' + i] + '">' + map['post_id_' + i].split("_")[1] +'</a></h5><p>' + decode_utf8(map['post_msg_'+i]) + '</p><p>Actual likes: <b>' + map['post_likes_'+i] + '</b></p><p>Predicted likes: <b>' + map['post_pred_'+i] + '</b></p></div><br/><br/>'
 
 	    }
 

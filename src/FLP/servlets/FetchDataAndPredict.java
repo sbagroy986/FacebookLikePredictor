@@ -85,7 +85,9 @@ public class FetchDataAndPredict extends HttpServlet {
 			dump = new JSONObject(readResponse);
 			
 			pic_url = dump.getJSONObject("picture").getJSONObject("data").getString("url");
-			user_id = dump.getString("id");
+			user_id = dump.getString("id").toString();
+//			System.out.println(dump);
+//			System.exit(0);
 			
 			int len = posts_dump.size();
 			response.getWriter().println("Total number of posts: " + len);
@@ -146,8 +148,9 @@ public class FetchDataAndPredict extends HttpServlet {
 	    	response.addCookie(post_msg);
 	    }
 	    
-	    RequestDispatcher view = request.getRequestDispatcher("/results.html");
-		view.forward(request, response);
+//	    RequestDispatcher view = request.getRequestDispatcher("/results.html");
+	    response.sendRedirect("./results.html");
+		return;
 	    
 	}
 
