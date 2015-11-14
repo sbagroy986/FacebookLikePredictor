@@ -28,7 +28,7 @@
 	<classpathentry kind="lib" path="/home/shrey/Downloads/org.json-20120521.jar"/>
 	<classpathentry kind="lib" path="/opt/tomcat/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="/opt/tomcat/lib/catalina.jar"/>
-	<classpathentry kind="lib" path="/home/shrey/workspace/FacebookLikesPredictor/WebContent/WEB-INF/lib/org.json-20120521.jar"/>
-	<classpathentry kind="lib" path="/home/shrey/workspace/FacebookLikesPredictor/WebContent/WEB-INF/lib/Jama-1.0.3.jar"/>
+	<classpathentry kind="lib" path="/home/shrey/workspace/FacebookLikePredictor/WebContent/WEB-INF/lib/org.json-20120521.jar"/>
+	<classpathentry kind="lib" path="/home/shrey/workspace/FacebookLikePredictor/WebContent/WEB-INF/lib/Jama-1.0.3.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

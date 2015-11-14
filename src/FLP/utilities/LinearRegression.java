@@ -43,6 +43,7 @@ public class LinearRegression {
 	private static HashMap<String,Integer> top_10 = new HashMap<>();
 	
 	public static double MACHEPS = 2E-16;
+	private static Double[] accuracy = new Double[4];
 	
 	public static void updateMacheps() {
 		  MACHEPS = 1;
@@ -153,7 +154,6 @@ public class LinearRegression {
 			x[i] = temp;
 		}
 		X = new Matrix(x);
-		response.getWriter().println(X);
 	}
 	
 	public static double CostFunction(double[][] h, double[] y)
@@ -216,33 +216,29 @@ public class LinearRegression {
 				flag=1;
 			}
 			
-			response.getWriter().println("Actual: " + y[i][0] + " | Predicted: " + a[i][0] + "||| RESULT: " + flag);
+//			response.getWriter().println("Actual: " + y[i][0] + " | Predicted: " + a[i][0] + "||| RESULT: " + flag);
 		}
-		response.getWriter().println();
-		response.getWriter().println();
-		response.getWriter().println("Accuracy for 15 margin: "  + ((double)(count_15/(double)(m)))*100 );
-		response.getWriter().println("Accuracy for 10 margin: "  + ((double)(count_10/(double)(m)))*100 );
-		response.getWriter().println("Accuracy for 5 margin: "  + ((double)(count_5/(double)(m)))*100 );
-		response.getWriter().println("Accuracy for 3 margin: "  + ((double)(count_3/(double)(m)))*100 );
-		response.getWriter().println();
-		response.getWriter().println();
-		response.getWriter().println("Top 15 expected likes: ");
-		for(String s: top_10.keySet())
-		{
-			response.getWriter().println(s + " : " + top_10.get(s));
-		}
+//		response.getWriter().println();
+//		response.getWriter().println();
+//		response.getWriter().println("Accuracy for 15 margin: "  + ((double)(count_15/(double)(m)))*100 );
+//		response.getWriter().println("Accuracy for 10 margin: "  + ((double)(count_10/(double)(m)))*100 );
+//		response.getWriter().println("Accuracy for 5 margin: "  + ((double)(count_5/(double)(m)))*100 );
+//		response.getWriter().println("Accuracy for 3 margin: "  + ((double)(count_3/(double)(m)))*100 );
+//		response.getWriter().println();
+//		response.getWriter().println();
+//		response.getWriter().println("Top 15 expected likes: ");
+//		for(String s: top_10.keySet())
+//		{
+//			response.getWriter().println(s + " : " + top_10.get(s));
+//		}
 		count_15 = ((double)(count_15/(double)(m)))*100;
 		count_10 = ((double)(count_10/(double)(m)))*100;
 		count_5 = ((double)(count_5/(double)(m)))*100;
 		count_3 = ((double)(count_3/(double)(m)))*100;
-		Cookie fif = new Cookie("accuracy_15",""+count_15);
-		Cookie ten = new Cookie("accuracy_10",""+count_10);
-		Cookie three = new Cookie("accuracy_3",""+count_3);
-		Cookie five = new Cookie("accuracy_5",""+count_5);
-		response.addCookie(fif);
-		response.addCookie(five);
-		response.addCookie(ten);
-		response.addCookie(three);
+		accuracy[0] = count_3;
+		accuracy[1] = count_5;
+		accuracy[2] = count_10;
+		accuracy[3] = count_15;
 	}
 	
 	
@@ -309,6 +305,11 @@ public class LinearRegression {
 	public static HashMap<String,Integer> getTop10()
 	{
 		return top_10;
+	}
+	
+	public static Double[] getAccuracy()
+	{
+		return accuracy;
 	}
 	
 }
