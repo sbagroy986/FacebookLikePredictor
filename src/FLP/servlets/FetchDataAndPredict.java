@@ -31,7 +31,7 @@ import FLP.utilities.LinearRegression;
 @WebServlet("/FetchDataAndPredict")
 public class FetchDataAndPredict extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Post> posts = new ArrayList<>();
+	private ArrayList<Post> posts;
     private String token;
     private String pic_url;
     private String user_id;
@@ -42,11 +42,17 @@ public class FetchDataAndPredict extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		posts = null;
+		posts = new ArrayList<>();
+		token = null;
+		
 		Cookie[] cookies = request.getCookies();
 		for(Cookie c: cookies)
 		{
 			if(c.getName().equals("token"))
-				token = c.getValue();
+				{
+					token = c.getValue();
+				}
 			
 		}
 		
@@ -58,6 +64,7 @@ public class FetchDataAndPredict extends HttpServlet {
 
 	    String readResponse;
 	    ArrayList<JSONObject> posts_dump = new ArrayList<>();
+	    posts_dump=null;
 	    readResponse = reader.readLine();
 	    try {
 			JSONObject dump = new JSONObject(readResponse);
