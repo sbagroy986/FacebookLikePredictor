@@ -64,7 +64,6 @@ public class FetchDataAndPredict extends HttpServlet {
 
 	    String readResponse;
 	    ArrayList<JSONObject> posts_dump = new ArrayList<>();
-	    posts_dump=null;
 	    readResponse = reader.readLine();
 	    try {
 			JSONObject dump = new JSONObject(readResponse);
