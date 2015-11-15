@@ -34,17 +34,43 @@
 
         <!-- Heading Row -->
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <h1>Procedure</h1>
-                <p>Implemented a basic Machine Learning algorithm to predict likes on a post, using the previous posts of a user</p><br/>
-           		<p>Since the algorithm had to be self-implemented (i.e, could not use third-party ML libraries), we have used simple Linear Regression to approach this task.</p>
-
-
+                <p>Implemented a basic Machine Learning algorithm to predict likes on a post, using the previous posts of a user.Since the algorithm had to be self-implemented (i.e, we could not use third-party ML libraries), we have used simple Linear Regression for this project.</p>
+           		<p style="text-align:center;">h<sub>&#920;</sub>(x) = &#920;<sub>0</sub> + &#920;<sub>1</sub>x<sub>1</sub> + &#920;<sub>2</sub>x<sub>2</sub> + .... + &#920;<sub>n</sub>x<sub>n</sub> = X&#920;<sup>T</sup></p>
+           		<p>Here, h<sub>&#920;</sub> is our hypothesis function. X is a mxn matrix where m is the number of data samples (number of posts, in this case) and n is the number of features. &#920; is a 1xn matrix which contains parameters (&#920;<sub>1</sub>,&#920;<sub>2</sub>...&#920;<sub>n</sub>) corresponding to each feature. This gives us h<sub>&#920;</sub>, an mx1 matrix which we cross-reference with the actual likes of the m corresponding posts to calculate accuracy.</p>
+           		<p>We are extracting 14 features for each post. This list is (by no means) exhaustive. It's possible to go into much more detail but since we're short on time, we'll just cover these basic features: </p>
+           		<div class="container">
+           			<div class="row">
+           				<div class="col-md-4">
+			           		<ul>
+								<li>People in (with the user) the post</li>
+								<li>People tagged in the message</li>
+								<li>Source of post (Categorical/One Hot Encoded)</li>
+								<li>Presence of message</li>
+								<li>Presence of description</li>
+								<li>Presence of caption</li>
+								<li>Length of message</li>
+			           		</ul>           					
+           				</div>
+           				<div style="col-md-4">
+			           		<ul>
+								<li>Presence of location</li>
+								<li>Type of post (Categorical/One Hot Encoded)</li>
+								<li>Type of status (Categorical/One Hot Encoded)</li>
+								<li>Created hour of day</li>
+								<li>Created day of week</li>
+								<li>Number of hashtags</li>
+								<li>Number of emotes</li>
+			           		</ul>           					
+           				</div>
+           			</div>
+           		</div>
             </div>
             <!-- /.col-md-8 -->
             <!-- /.col-md-4 -->
         </div>
-
+        <hr>
         <div class="row">
             <div class="col-md-8">
                 <h1>Results</h1>
