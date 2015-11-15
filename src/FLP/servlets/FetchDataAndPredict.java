@@ -65,12 +65,14 @@ public class FetchDataAndPredict extends HttpServlet {
 	    String readResponse;
 	    ArrayList<JSONObject> posts_dump = new ArrayList<>();
 	    readResponse = reader.readLine();
+	    int paging_count=0;
 	    try {
 			JSONObject dump = new JSONObject(readResponse);
 			addPosts(posts_dump,dump.getJSONArray("data"));
 			
-			while(dump.has("paging") && dump.getJSONObject("paging").has("next"))
+			while(dump.has("paging") && dump.getJSONObject("paging").has("next") && paging_count<11)
 			{
+				paging_count++;
 				System.out.println("here");
 				httpClient = HttpClients.createDefault();
 				GET_URL = dump.getJSONObject("paging").getString("next");
