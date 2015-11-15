@@ -55,6 +55,15 @@ public class LinearRegression {
 	
 	public static void setLinearRegression(ArrayList<Post> posts,HttpServletResponse response, String tok) throws IOException, JSONException
 	{
+		X=null;
+		Y=null;
+		theta=null;
+		ans=null;
+		token=null;
+		freq = null;
+		freq = new HashMap<>();
+		top_10=null;
+		top_10 = new HashMap<>();
 		token = tok;
 		m = posts.size();
 		setY(posts);
