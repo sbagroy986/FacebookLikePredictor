@@ -70,7 +70,7 @@ public class FetchDataAndPredict extends HttpServlet {
 			JSONObject dump = new JSONObject(readResponse);
 			addPosts(posts_dump,dump.getJSONArray("data"));
 			
-			while(dump.has("paging") && dump.getJSONObject("paging").has("next") && paging_count<8)
+			while(dump.has("paging") && dump.getJSONObject("paging").has("next") && paging_count<5)
 			{
 				paging_count++;
 				System.out.println(paging_count);
