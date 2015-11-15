@@ -67,7 +67,7 @@ public class LinearRegression {
 		token = tok;
 		m = posts.size();
 		setY(posts);
-		setX(posts,response);
+		setX(posts);
 		NormalEqn();
 		calcFreq(posts);
 		calcAns();
@@ -75,8 +75,8 @@ public class LinearRegression {
 	
 	public static void setY(ArrayList<Post> posts)
 	{
-		double[][] y = new double[m][];
-		for(int i=0;i<m;i++)
+		double[][] y = new double[posts.size()][];
+		for(int i=0;i<posts.size();i++)
 		{
 			double[] temp = new double[1];
 			temp[0] = posts.get(i).getLikes();
@@ -114,11 +114,11 @@ public class LinearRegression {
 		  return new Matrix(inverse);
 	}
 	 
-	public static void setX(ArrayList<Post> posts,HttpServletResponse response) throws IOException
+	public static void setX(ArrayList<Post> posts) throws IOException
 	{
-		double[][] x = new double[m][];
+		double[][] x = new double[posts.size()][];
 		
-		for(int i=0;i<m;i++)
+		for(int i=0;i<posts.size();i++)
 		{
 			double[] temp = new double[27];
 			
@@ -319,6 +319,20 @@ public class LinearRegression {
 	public static Double[] getAccuracy()
 	{
 		return accuracy;
+	}
+	
+	public static void testTheta(ArrayList<Post> posts) throws IOException
+	{
+		setX(posts);
+		setY(posts);
+		calcAns();
+		double[][] y = Y.getArray();
+		double[][] a = ans.getArray();
+		for(int i=0;i<posts.size();i++)
+			{
+				posts.get(i).setPredictedLikes((int)a[i][0]);
+			}
+		
 	}
 	
 }
