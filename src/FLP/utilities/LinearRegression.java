@@ -196,6 +196,8 @@ public class LinearRegression {
 		for(int i=0;i<m;i++)
 			{
 				form[i]=y[i][0];
+				if((int)a[i][0] < 0)
+					a[i][0] = 0;
 				posts.get(i).setPredictedLikes((int)a[i][0]);
 			}
 		double cost =  CostFunction(a,form);

@@ -127,7 +127,7 @@ public class FetchDataAndPredict extends HttpServlet {
 	    
 	    Double[] accuracy = LinearRegression.getAccuracy();
 	    
-	    response.getWriter().println("<br/>            </div>            <div class='col-md-12' style='height:650px;'>                <div id='chart_div' style='height:600px;'></div>            </div>        </div>        <hr>        <div class='row'>            <div class='col-lg-12'>                <div class='well text-center'>                    <div id='three' style=\"text-align:center\"> Accuracy for predicted likes within a 3 like margin : <b>" + new BigDecimal(accuracy[0] ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                    <div id='five' style=\"text-align:center\"> Accuracy for predicted likes within a 5 like margin : <b>" + new BigDecimal(accuracy[1]).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                    <div id='ten' style=\"text-align:center\"> Accuracy for predicted likes within a 10 like margin : <b>" + new BigDecimal(accuracy[2] ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                    <div id='fif' style=\"text-align:center\"> Accuracy for predicted likes within a 15 like margin : <b>" + new BigDecimal(accuracy[3] ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                </div>            </div>        </div>        <div class='row' id='posts'>");
+	    response.getWriter().println("<br/>            </div>            <div class='col-md-12' style='height:650px;'>                <div id='chart_div' style='height:600px;'></div>            </div><div class='col-md-6'> <div id='curve_chart' style='width: 650px; height: 500px'></div></div><div class='col-md-5'>  <ul class='nav nav-tabs list-inline' style='margin-top:55px'>  <li class='active'><a data-toggle='tab' href='#menu0'>3 likes</a></li>  <li><a data-toggle='tab' href='#menu1'>5 likes</a></li>  <li><a data-toggle='tab' href='#menu2'>10 likes</a></li>  <li><a data-toggle='tab' href='#menu3'>15 likes</a></li></ul><div class='tab-content'><div id='menu0' class='tab-pane fade in active'>  <div id='donutchart-3' style='width: 700px; height: 500px;'></div></div><div id='menu1' class='tab-pane fade active'>  <div id='donutchart-5' style='width: 700px; height: 500px;'></div></div><div id='menu2' class='tab-pane fade active'>  <div id='donutchart-10' style='width: 700px; height: 500px;'></div></div><div id='menu3' class='tab-pane fade active'>  <div id='donutchart-15' style='width: 700px; height: 500px;'></div></div></div> </div> </div>       <hr>        <div class='row'>            <div class='col-lg-12'>                <div class='well text-center'>                    <div id='three' style=\"text-align:center\"> Accuracy for predicted likes within a 3 like margin : <b>" + new BigDecimal(accuracy[0] ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                    <div id='five' style=\"text-align:center\"> Accuracy for predicted likes within a 5 like margin : <b>" + new BigDecimal(accuracy[1]).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                    <div id='ten' style=\"text-align:center\"> Accuracy for predicted likes within a 10 like margin : <b>" + new BigDecimal(accuracy[2] ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                    <div id='fif' style=\"text-align:center\"> Accuracy for predicted likes within a 15 like margin : <b>" + new BigDecimal(accuracy[3] ).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + "%</b></div>                </div>            </div>        </div>        <div class='row' id='posts'>");
 	    int count_posts = 0;
 	    for(int i=1;count_posts<=15;i++)
 	    {
@@ -149,7 +149,7 @@ public class FetchDataAndPredict extends HttpServlet {
 				e.printStackTrace();
 			}
 	    }		
-	    response.getWriter().println("</div>        <footer>            <div class='row'>                <div class='col-lg-12'>		            <p>CSE 121 &copy; AP</p>                </div>            </div>        </footer>    </div>    <script src='./assets/js/jquery.js'></script>    <script src='./assets/js/bootstrap.min.js'></script>	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>	<script type='text/javascript' src=\"https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['bar']}]}\"></script>");
+	    response.getWriter().println("</div>        <footer>            <div class='row'>                <div class='col-lg-12'>		            <p>CSE 121 &copy; AP</p>                </div>            </div>        </footer>    </div>    <script src='./assets/js/jquery.js'></script>    <script src='./assets/js/bootstrap.min.js'></script>	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>	<script type='text/javascript' src=\"https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['bar']}]}\"></script><script type='text/javascript' src=\"https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}\"></script>");
 	    
 	    response.getWriter().println("<script type='text/javascript'>	window.onload = function() {	};    google.setOnLoadCallback(drawChart);    function decode_utf8(s) { 	 return decodeURIComponent(escape(s));	}    function drawChart() {	");
 	    response.getWriter().println("var d = [ ['People','Number of likes'],");
@@ -161,7 +161,32 @@ public class FetchDataAndPredict extends HttpServlet {
 	    	if(temp_count!=15)
 	    		response.getWriter().println(",");
 	    }
-	    response.getWriter().println("]; var data = google.visualization.arrayToDataTable(d);	var options = {		  chart: {			 title: 'Top 15 expected likers',			 subtitle: 'Based on the number of previous posts liked',		  },		  bar: { groupWidth: '90%' },		  bars: 'horizontal',	   };	   var chart = new google.charts.Bar(document.getElementById('chart_div'));	   chart.draw(data, options);	 }	  </script></body></html>");
+	    response.getWriter().print("]; var data = google.visualization.arrayToDataTable(d);	var options = {		  chart: {			 title: 'Top 15 expected likers',			 subtitle: 'Based on the number of previous posts liked',		  },		  bar: { groupWidth: '90%' },		  bars: 'horizontal',	   };	   var chart = new google.charts.Bar(document.getElementById('chart_div'));	   chart.draw(data, options);");
+	    response.getWriter().print("        var line_data = google.visualization.arrayToDataTable([['Year', 'Actual', 'Predicted'],");
+	    for(int i=0;i<posts.size();i++)
+	    {
+	    	response.getWriter().println("['',"+ posts.get(i).getLikes() +","+posts.get(i).getPredictedLikes()+"]");
+	    	if(i!= posts.size()-1) response.getWriter().println(",");
+	    }
+	    response.getWriter().println("]);                var options = {                  title: 'Actual vs Predicted',                  curveType: 'function',                  legend: { position: 'bottom' }                };                var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));                chart.draw(line_data, options);");
+	    response.getWriter().println("var pie_data = google.visualization.arrayToDataTable([  ['Correct', 'Incorrect'],");
+	    response.getWriter().println("['Correct'," + accuracy[1]+"],['Incorrect',"+(100-accuracy[1])+"]");
+	    //	    "['Correct',     80],  ['Incorrect',      20]"
+	    response.getWriter().println("]);var options = {  title: 'Accuracy (5 Likes Margin)',  pieHole: 0.4,};var chart = new google.visualization.PieChart(document.getElementById('donutchart-5'));chart.draw(pie_data, options);");
+	    response.getWriter().println("pie_data = google.visualization.arrayToDataTable([  ['Correct', 'Incorrect'],");
+	    response.getWriter().println("['Correct'," + accuracy[0]+"],['Incorrect',"+(100-accuracy[0])+"]");
+	    //	    "['Correct',     80],  ['Incorrect',      20]"
+	    response.getWriter().println("]);var options = {  title: 'Accuracy (3 Likes Margin)',  pieHole: 0.4,};var chart = new google.visualization.PieChart(document.getElementById('donutchart-3'));chart.draw(pie_data, options);");
+	    response.getWriter().println("pie_data = google.visualization.arrayToDataTable([  ['Correct', 'Incorrect'],");
+	    response.getWriter().println("['Correct'," + accuracy[2]+"],['Incorrect',"+(100-accuracy[2])+"]");
+	    //	    "['Correct',     80],  ['Incorrect',      20]"
+	    response.getWriter().println("]);var options = {  title: 'Accuracy (10 Likes Margin)',  pieHole: 0.4,};var chart = new google.visualization.PieChart(document.getElementById('donutchart-10'));chart.draw(pie_data, options);");
+	    response.getWriter().println("pie_data = google.visualization.arrayToDataTable([  ['Correct', 'Incorrect'],");
+	    response.getWriter().println("['Correct'," + accuracy[3]+"],['Incorrect',"+(100-accuracy[3])+"]");
+	    //	    "['Correct',     80],  ['Incorrect',      20]"
+	    response.getWriter().println("]);var options = {  title: 'Accuracy (15 Likes Margin)',  pieHole: 0.4,};var chart = new google.visualization.PieChart(document.getElementById('donutchart-15'));chart.draw(pie_data, options);");
+	    
+	    response.getWriter().print("}	  </script></body></html>");
 	    
 	}
 
