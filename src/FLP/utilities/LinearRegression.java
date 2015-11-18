@@ -188,12 +188,13 @@ public class LinearRegression {
 		theta = tempInverse.times(X.transpose()).times(Y);
 	}
 	
-	public static void display(ArrayList<Post> posts,HttpServletResponse response) throws OutOfRangeException, IOException
+	public static void display(ArrayList<Post> posts,HttpServletResponse response,ArrayList<Post> train_dataset) throws OutOfRangeException, IOException
 	{
+		testTheta(train_dataset);
 		double[][] y = Y.getArray();
 		double[][] a = ans.getArray();
-		double[] form = new double[m];
-		for(int i=0;i<m;i++)
+		double[] form = new double[train_dataset.size()];
+		for(int i=0;i<train_dataset.size();i++)
 			{
 				form[i]=y[i][0];
 				if((int)a[i][0] < 0)
@@ -203,7 +204,7 @@ public class LinearRegression {
 		double cost =  CostFunction(a,form);
 		double count_15=0,count_10=0,count_5=0,count_3=0;
 		System.out.println("COST : " + cost);
-		for(int i=0;i<m;i++)
+		for(int i=0;i<train_dataset.size();i++)
 		{
 			int flag=0;
 			if(a[i][0] < (y[i][0] + 15) && a[i][0] > (y[i][0]-15))
@@ -332,6 +333,8 @@ public class LinearRegression {
 		double[][] a = ans.getArray();
 		for(int i=0;i<posts.size();i++)
 			{
+				if((int)a[i][0] < 0)
+					a[i][0] = 0;
 				posts.get(i).setPredictedLikes((int)a[i][0]);
 			}
 		
