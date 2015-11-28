@@ -274,7 +274,7 @@ public class Post {
 	{
 		switch(type)
 		{
-			case "link": this.likes = 1; break;
+			case "link": this.link = 1; break;
 			case "status": this.status = 1; break;
 			case "photo": this.photo = 1; break;
 			case "video": this.video = 1; break;
